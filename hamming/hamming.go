@@ -1,28 +1,26 @@
 package hamming
 
 import (
-	"fmt"
+	"errors"
+	"unicode/utf8"
 )
 
 func Distance(a, b string) (int, error) {
 	// 0th condition to check equal length
-	if len(a) != len(b) {
-		return 0, fmt.Errorf("disallowed: length of both strings should equal")
+	if utf8.RuneCountInString(a) != utf8.RuneCountInString(b) {
+		return 0, errors.New("disallowed: length of both strings should equal")
 	}
 
 	var ham int = 0
-	// if both strings are identical
-	if a == b {
-		return 0, nil
-	} else {
-		for i := 0; i < len(a); i++ {
-			if a[i] != b[i] {
-				ham += 1
-			} else {
-				continue
-			}
-		}
-		return ham, nil
-	}
+	var idx int = 0
 
+	stringToRunes := []rune(b)
+
+	for _, value := range a {
+		if value != stringToRunes[idx] {
+			ham += 1
+		}
+		idx++
+	}
+	return ham, nil
 }
